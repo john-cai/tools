@@ -1,0 +1,27 @@
+#!/bin/bash -le
+
+# Get repo root by sub-shelling and getting the parent directory of this script
+DIR=$( cd $(dirname $0)/.. && pwd )
+
+echo "=> RUNNING $DIR/$0" `date`
+
+echo -n "Testing with "
+go version
+go env
+
+echo "Running tests..."
+mkdir -pv build
+go test -v -covermode=atomic -race -coverprofile=$DIR/build/count.out -parallel=4 .
+
+echo "Running go vet..."
+go vet .
+
+echo "Installing go lint..."
+go get -v github.com/golang/lint/golint
+
+echo "Running go lint..."
+$GOPATH/bin/golint .
+
+echo "Generating code coverage report..."
+mkdir -pv build/coverage
+go tool cover -html=$DIR/build/count.out -o $DIR/build/coverage/index.html
