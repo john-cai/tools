@@ -36,7 +36,7 @@ func main() {
 	flag.StringVar(&ApidUrl, "apid", "localhost", "apid url")
 	flag.Parse()
 
-	ApidClient = apid.NewHTTPClient(fmt.Sprintf("ApidUrl:%d", 8082))
+	ApidClient = apid.NewHTTPClient(fmt.Sprintf("http://%s:%d", ApidUrl, 8082))
 	ApidAdaptor = apidadaptor.New(ApidClient)
 
 	var wg sync.WaitGroup
@@ -155,7 +155,7 @@ func createSubusers(resellerID int) error {
 func createUser() (SignupResponse, error) {
 	username := fmt.Sprintf("testuser_%s", uuid.New())
 	email := fmt.Sprintf("testuser_%s@sendgrid.com", uuid.New())
-	password := "very secure password"
+	password := "very secure password 1"
 	return createSpecificUser(username, email, password)
 }
 
